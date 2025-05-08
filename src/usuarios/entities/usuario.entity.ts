@@ -8,14 +8,18 @@ export class Usuario {
 
   @Column()
   nombre: string;
+
   @Column()
   apellidopa: string;
+
   @Column()
   apellidoma: string;
+
   @Column({
     unique: true,
   })
   email: string;
+
   @Column()
   password: string;
 

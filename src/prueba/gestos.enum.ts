@@ -1,1 +1,3 @@
-export enum GestosEnum {}
+export enum GestosEnum {
+  Arriba = 'Arriba',
+}

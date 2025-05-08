@@ -14,10 +14,11 @@ export class Prueba {
   id: number;
 
   @Column()
-  cumple: boolean;
+  cumple: string;
 
-  @Column({ type: 'enum', enum: GestosEnum })
-  gesto: GestosEnum;
+  //@Column({ type: 'enum', enum: GestosEnum })
+  @Column()
+  gesto: string;
 
   @Column()
   imagen: string;

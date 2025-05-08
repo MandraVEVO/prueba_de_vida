@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Repository } from 'typeorm';
@@ -7,20 +12,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsuariosService {
-
   private readonly logger = new Logger('UsuariosService');
-  
+
   constructor(
     @InjectRepository(Usuario)
     private readonly usuariosRepository: Repository<Usuario>,
-  ) {}  
-
+  ) {}
 
   create(createUsuarioDto: CreateUsuarioDto) {
     try {
       const usuario = this.usuariosRepository.create(createUsuarioDto);
+      this.usuariosRepository.save(usuario);
       return usuario;
-
     } catch (error) {
       this.handleExceptions(error);
     }
@@ -47,7 +50,8 @@ export class UsuariosService {
       throw new BadRequestException(error.detail);
     }
     this.logger.error(error);
-    throw new InternalServerErrorException('Unexpected error, check server logs');
+    throw new InternalServerErrorException(
+      'Unexpected error, check server logs',
+    );
   }
-
 }

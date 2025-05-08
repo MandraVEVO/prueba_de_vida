@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { PruebaService } from './prueba.service';
 import { CreatePruebaDto } from './dto/create-prueba.dto';
 import { UpdatePruebaDto } from './dto/update-prueba.dto';
@@ -10,6 +21,15 @@ export class PruebaController {
   @Post()
   create(@Body() createPruebaDto: CreatePruebaDto) {
     return this.pruebaService.create(createPruebaDto);
+  }
+
+  @Post('con-imagen')
+  @UseInterceptors(FileInterceptor('imagen'))
+  createWithImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createPruebaDto: CreatePruebaDto,
+  ) {
+    return this.pruebaService.createWithImage(createPruebaDto, file);
   }
 
   @Get()

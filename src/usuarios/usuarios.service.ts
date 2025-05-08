@@ -3,25 +3,31 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsuariosService {
+
   private readonly logger = new Logger('UsuariosService');
+  
   constructor(
+    @InjectRepository(Usuario)
     private readonly usuariosRepository: Repository<Usuario>,
   ) {}  
 
 
   create(createUsuarioDto: CreateUsuarioDto) {
     try {
-      
+      const usuario = this.usuariosRepository.create(createUsuarioDto);
+      return usuario;
+
     } catch (error) {
-      
+      this.handleExceptions(error);
     }
   }
 
   findAll() {
-    return `This action returns all usuarios`;
+    return this.usuariosRepository.find();
   }
 
   findOne(id: number) {

@@ -4,6 +4,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { retry } from 'rxjs';
 
 @Injectable()
 export class UsuariosService {
@@ -18,7 +19,7 @@ export class UsuariosService {
 
   create(createUsuarioDto: CreateUsuarioDto) {
     try {
-      const usuario = this.usuariosRepository.create(createUsuarioDto);
+      const usuario = this.usuariosRepository.save(createUsuarioDto);
       return usuario;
 
     } catch (error) {
@@ -27,19 +28,25 @@ export class UsuariosService {
   }
 
   findAll() {
-    return this.usuariosRepository.find();
+    const usuario = this.usuariosRepository.find();
+    return usuario;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} usuario`;
+  findOne(id: string) {
+    return this.usuariosRepository.findOneBy({ id });
   }
 
-  update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  update(id: string, updateUsuarioDto: UpdateUsuarioDto) {
+    return this.usuariosRepository.update(id, updateUsuarioDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usuario`;
+  async remove(id: string) {
+    const usuario = await this.findOne(id);
+    if (!usuario) {
+      throw new BadRequestException(`Usuario with ID ${id} not found`);
+    }
+    await this.usuariosRepository.remove(usuario);
+    return usuario;
   }
 
   private handleExceptions(error: any) {

@@ -16,7 +16,6 @@ export class Prueba {
   @Column()
   cumple: string;
 
-  //@Column({ type: 'enum', enum: GestosEnum })
   @Column()
   gesto: string;
 

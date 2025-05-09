@@ -40,6 +40,10 @@ export class UsuariosService {
     return this.usuariosRepository.findOneBy({ id });
   }
 
+  async findByEmail(email: string) {
+    return this.usuariosRepository.findOne({ where: { email } });
+  }
+
   update(id: string, updateUsuarioDto: UpdateUsuarioDto) {
     return this.usuariosRepository.update(id, updateUsuarioDto);
   }

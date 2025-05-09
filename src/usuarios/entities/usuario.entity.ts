@@ -20,6 +20,9 @@ export class Usuario {
   })
   email: string;
 
+  @Column({ default: false })
+  isAdmin: boolean;
+
   @Column()
   password: string;
 

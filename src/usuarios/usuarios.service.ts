@@ -22,12 +22,9 @@ export class UsuariosService {
 
   create(createUsuarioDto: CreateUsuarioDto) {
     try {
-<<<<<<< HEAD
       const usuario = this.usuariosRepository.create(createUsuarioDto);
       this.usuariosRepository.save(usuario);
-=======
-      const usuario = this.usuariosRepository.save(createUsuarioDto);
->>>>>>> origin/main
+
       return usuario;
     } catch (error) {
       this.handleExceptions(error);

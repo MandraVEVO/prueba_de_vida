@@ -27,6 +27,27 @@ export class MinioService implements OnModuleInit {
     }
   }
 
+  async uploadBase64(
+    base64: string,
+    filename: string,
+    mimetype: string,
+  ): Promise<string> {
+    const buffer = Buffer.from(base64, 'base64');
+    await this.minioClient.putObject(
+      this.bucketName,
+      filename,
+      buffer,
+      buffer.length,
+      { 'Content-Type': mimetype },
+    );
+    // Genera una URL firmada válida por 7 días (604800 segundos)
+    return await this.minioClient.presignedGetObject(
+      this.bucketName,
+      filename,
+      7 * 24 * 60 * 60,
+    );
+  }
+
   async upload(file: Express.Multer.File): Promise<string> {
     const fileName = `${Date.now()}-${file.originalname}`;
     await this.minioClient.putObject(
@@ -36,10 +57,11 @@ export class MinioService implements OnModuleInit {
       file.size,
       { 'Content-Type': file.mimetype },
     );
+    // Genera una URL firmada válida por 7 días (604800 segundos)
     return await this.minioClient.presignedGetObject(
       this.bucketName,
       fileName,
-      24 * 60 * 60,
+      7 * 24 * 60 * 60,
     );
   }
 }

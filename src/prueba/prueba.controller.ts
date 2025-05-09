@@ -32,6 +32,11 @@ export class PruebaController {
     return this.pruebaService.createWithImage(createPruebaDto, file);
   }
 
+  @Post('con-base64')
+  createWithBase64(@Body() body: any) {
+    return this.pruebaService.createWithBase64(body);
+  }
+
   @Get()
   findAll() {
     return this.pruebaService.findAll();

@@ -34,6 +34,32 @@ export class PruebaService {
     return this.pruebaRepository.save(prueba);
   }
 
+  async createWithBase64(
+    createPruebaDto: CreatePruebaDto & {
+      imagenBase64: string;
+      nombreImagen: string;
+      mimetype: string;
+    },
+  ) {
+    let imageUrl = '';
+    if (
+      createPruebaDto.imagenBase64 &&
+      createPruebaDto.nombreImagen &&
+      createPruebaDto.mimetype
+    ) {
+      imageUrl = await this.minioService.uploadBase64(
+        createPruebaDto.imagenBase64,
+        `${Date.now()}-${createPruebaDto.nombreImagen}`,
+        createPruebaDto.mimetype,
+      );
+    }
+    const prueba = this.pruebaRepository.create({
+      ...createPruebaDto,
+      imagen: imageUrl,
+    });
+    return this.pruebaRepository.save(prueba);
+  }
+
   findAll() {
     return this.pruebaRepository.find({
       relations: {
